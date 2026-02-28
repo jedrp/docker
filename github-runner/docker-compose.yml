@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  github-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: github-actions-runner
+    hostname: jed-home-runner-01
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - runner-data:/home/runner/actions-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - RUNNER_ALLOW_RUNASROOT=1
+      - GITHUB_REPO_URL=${GITHUB_REPO_URL:-}
+      - GITHUB_RUNNER_TOKEN=${GITHUB_RUNNER_TOKEN:-}
+      - RUNNER_LABELS=${RUNNER_LABELS:-self-hosted,Linux,X64,docker,home-server}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  runner-data:
