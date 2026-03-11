@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel-02
+    restart: always
+    command: tunnel run
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - cloudflare-tunnel-net
+    environment:
+      TUNNEL_TOKEN: 
+networks:
+  cloudflare-tunnel-net:
+    driver: bridge
